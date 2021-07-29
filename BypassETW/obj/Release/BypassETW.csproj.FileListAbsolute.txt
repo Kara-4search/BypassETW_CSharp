@@ -1,0 +1,6 @@
+C:\Project\Projects\Project_BypassETW\BypassETW\BypassETW\bin\Release\BypassETW.exe.config
+C:\Project\Projects\Project_BypassETW\BypassETW\BypassETW\bin\Release\BypassETW.exe
+C:\Project\Projects\Project_BypassETW\BypassETW\BypassETW\bin\Release\BypassETW.pdb
+C:\Project\Projects\Project_BypassETW\BypassETW\BypassETW\obj\Release\BypassETW.csproj.CoreCompileInputs.cache
+C:\Project\Projects\Project_BypassETW\BypassETW\BypassETW\obj\Release\BypassETW.exe
+C:\Project\Projects\Project_BypassETW\BypassETW\BypassETW\obj\Release\BypassETW.pdb

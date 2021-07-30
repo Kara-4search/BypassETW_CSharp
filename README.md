@@ -3,15 +3,35 @@
 Blog link: working on it 
 
 - A simple Project to Bypass ETW
-
-# README Update later
+- Load the ntdll.dll with LoadLibrary And then Get the Function(RtlInitializeResource)'s address via GetProcAddress.
+- With the correct offset, the ”RtlInitializeResource“ address, and patch bytes, you should be able to patch it
+	- one thing you need to is, the offset on a different system(like a different version of win10) is different.
+	- So it may not gonna works on other systems.
+	- I only tested in Win10, and here is the windows version below.
+	```
+	10.0.19042
+	```
+- I am really don't think using the offset is a good idea.
+- I am gonna update the project later with the egg hunt.
 
 
 ## Usage
-	- Update later
+1. Launch through some white-list applications
+	* Without ETW bypass.
+	![avatar](https://raw.githubusercontent.com/Kara-4search/tempPic/main/Without_BypassETW.png)
+	* With ETW bypass.
+	![avatar](https://raw.githubusercontent.com/Kara-4search/tempPic/main/With_BypassETW.png)
+2. Combining with other shellcode loader or technic like
+	* bypass AMSI
+	* bypass Sysmon&EventLogs
+	* PPIP&Commandline Spoofing
+
+
 	
 ## TO-DO list
-	- Update later
+- bypass some AVs
+- Update the project later with the egg hunt
+- Build a shellcode loader combine all the technics
 	
 ## Reference link:
 	1. https://blog.securityevaluators.com/creating-av-resistant-malware-part-1-7604b83ea0c0

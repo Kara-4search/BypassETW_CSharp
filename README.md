@@ -12,7 +12,8 @@ Blog link: working on it
 	10.0.19042
 	```
 - I really don't think using the offset is a good idea.
-- I am gonna update the project later with the egg hunt.
+- I am gonna update the project later with the egg hunt.（DONE）
+- I updated the code，now it using egg hunt in steal of offset。
 
 
 ## Usage
@@ -30,7 +31,7 @@ Blog link: working on it
 	
 ## TO-DO list
 - bypass some AVs
-- Update the project later with the egg hunt
+- Update the project later with the egg hunt（DONE）
 - Build a shellcode loader combine all the technics
 	
 ## Reference link:

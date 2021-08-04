@@ -4,16 +4,16 @@ Blog link: working on it
 
 - A simple Project to Bypass ETW
 - Load the ntdll.dll with LoadLibrary And then Get the Function(RtlInitializeResource)'s address via GetProcAddress.
-- With the correct offset, the ”RtlInitializeResource“ address, and patch bytes, you should be able to patch it
-	- **one thing you need to is, the offset on a different system(like a different version of win10) is different.**
-	- **So it may not gonna works on other systems.**
-	- **I only tested in Win10, and here is the windows version below.**
+- ~~With the correct offset, the ”RtlInitializeResource“ address, and patch bytes, you should be able to patch it~~
+	- ~~**one thing you need to is, the offset on a different system(like a different version of win10) is different.**~~
+	- ~~**So it may not gonna works on other systems.**~~
+	- ~~**I only tested in Win10, and here is the windows version below.**~~
 	```
 	10.0.19042
 	```
 - I really don't think using the offset is a good idea.
 - I am gonna update the project later with the egg hunt.（DONE）
-- I updated the code，now it using egg hunt in steal of offset。
+- ** I updated the code，now it using egg hunt in steal of offset.**__20210804
 
 
 ## Usage

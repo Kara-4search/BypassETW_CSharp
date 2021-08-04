@@ -13,7 +13,7 @@ Blog link: working on it
 	```
 - I really don't think using the offset is a good idea.
 - I am gonna update the project later with the egg hunt.（DONE）
-- ** I updated the code，now it using egg hunt in steal of offset.**__20210804
+- **I updated the code，now it using egg hunt in steal of offset.** __20210804
 
 
 ## Usage

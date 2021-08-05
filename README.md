@@ -23,7 +23,7 @@ Blog link: working on it
 	* With ETW bypass.
 	![avatar](https://raw.githubusercontent.com/Kara-4search/tempPic/main/With_BypassETW.png)
 2. Combining with other shellcode loader or technic like
-	* bypass AMSI (Coming soon)
+	* bypass AMSI (~~Coming soon~~) (https://github.com/Kara-4search/BypassAMSI_CSharp) 
 	* bypass Sysmon&EventLogs (https://github.com/Kara-4search/WindowsEventLogsBypass_Csharp)
 	* PPIP&Commandline Spoofing (https://github.com/Kara-4search/PEB-PPIDspoofing_Csharp)
 

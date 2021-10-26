@@ -33,6 +33,10 @@ Blog link: working on it
 - bypass some AVs
 - Update the project later with the egg hunt（DONE）
 - Build a shellcode loader combine all the technics
+
+
+## Update history
+-  Bugs fixed for x86, now it should works with both x64/x86
 	
 ## Reference link:
 	1. https://blog.securityevaluators.com/creating-av-resistant-malware-part-1-7604b83ea0c0

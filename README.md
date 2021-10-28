@@ -36,7 +36,8 @@ Blog link: working on it
 
 
 ## Update history
--  Bugs fixed for x86, now it should works with both x64/x86
+- Bugs fixed for x86, now it should works with both x64/x86 - 20211026
+- Bugs fixed for x86 - 20211028
 	
 ## Reference link:
 	1. https://blog.securityevaluators.com/creating-av-resistant-malware-part-1-7604b83ea0c0

